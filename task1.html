@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма реєстрації</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #555;
+        }
+
+        input,
+        select,
+        textarea,
+        button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #dcb0ff;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #9b7fe1;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #6c45a0;
+        }
+
+        #passwordError {
+            color: rgb(51, 0, 255);
+            font-size: 16px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="registerForm">
+        <label for="firstName">Ім'я:</label>
+        <input type="text" id="firstName" name="firstName" required><br><br>
+
+        <label for="lastName">Прізвище:</label>
+        <input type="text" id="lastName" name="lastName" required><br><br>
+
+        <label for="email">Електронна пошта:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+        <p id="passwordError">Пароль повинен містити більше 5 символів.</p><br>
+
+        <label for="phone">Номер телефону:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+
+        <label for="bio">Короткий текст:</label>
+        <textarea id="bio" name="bio" rows="3"></textarea><br><br>
+
+        <label for="gender">Стать:</label>
+        <select id="gender" name="gender">
+            <option value="male">Чоловіча</option>
+            <option value="female">Жіноча</option>
+            <option value="other">Інша</option>
+        </select><br><br>
+
+        <button type="button" onclick="validateForm()">Відправити</button>
+    </form>
+
+    <script>
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            const passwordError = document.getElementById('passwordError');
+
+            if (password.length <= 5) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+                alert('Форма успішно відправлена!');
+                document.getElementById('registerForm').submit();
+            }
+        }
+    </script>
+
+</body>
+
+</html>

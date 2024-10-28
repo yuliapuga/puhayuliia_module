@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АЗС Менеджер</title>
+</head>
+
+<body>
+    <h2>Управління АЗС</h2>
+
+
+    <form id="gasStationForm">
+        <label for="stationId">Код АЗС:</label>
+        <input type="text" id="stationId" required><br><br>
+
+        <label for="address">Адреса:</label>
+        <input type="text" id="address" required><br><br>
+
+        <label for="company">Фірма-власник:</label>
+        <input type="text" id="company" required><br><br>
+
+        <label for="fuelA98">Запас А-98 (л):</label>
+        <input type="number" id="fuelA98" required><br><br>
+
+        <label for="fuelA95">Запас А-95 (л):</label>
+        <input type="number" id="fuelA95" required><br><br>
+
+        <label for="fuelA92">Запас А-92 (л):</label>
+        <input type="number" id="fuelA92" required><br><br>
+
+        <label for="priceA98">Ціна А-98 (грн/л):</label>
+        <input type="number" id="priceA98" required><br><br>
+
+        <label for="priceA95">Ціна А-95 (грн/л):</label>
+        <input type="number" id="priceA95" required><br><br>
+
+        <label for="priceA92">Ціна А-92 (грн/л):</label>
+        <input type="number" id="priceA92" required><br><br>
+
+        <button type="button" onclick="addOrEditStation()">Додати/Редагувати АЗС</button><br><br>
+        <button type="button" onclick="deleteelement()">Видалити АЗС</button>
+    </form>
+
+    <h3>Результати</h3>
+    <div id="output"></div>
+
+    <script>
+        class AZS {
+            constructor(id, address, company, fuelStocks, fuelPrices) {
+                this.id = id;
+                this.address = address;
+                this.company = company;
+                this.fuelStocks = fuelStocks;
+                this.fuelPrices = fuelPrices;
+            }
+        }
+
+        class AZSCollection {
+            constructor() {
+                this.stations = [];
+            }
+
+            addStation(station) {
+                if (station instanceof AZS) {
+                    this.stations.push(station);
+                }
+
+            }
+
+            addStations(stationsArray) {
+                this.stations.push(...stationsArray);
+            }
+
+            getStationById(id) {
+                return this.stations.find(station => station.id === id);
+            }
+
+            editStation(id, newStationData) {
+                const index = this.stations.findIndex(station => station.id === id);
+                if (index !== -1) this.stations[index] = newStationData;
+            }
+
+            removeStation(id) {
+                this.stations = this.stations.filter(station => station.id !== id);
+            }
+
+            getFuelStocks(fuelType, company) {
+                return this.stations
+                    .filter(station => station.company === company)
+                    .map(station => ({
+                        id: station.id,
+                        address: station.address,
+                        fuelStock: station.fuelStocks[fuelType] || 0
+                    }));
+            }
+        }
+
+        const gasStationCollection = new AZSCollection();
+
+        function addOrEditStation() {
+            const id = document.getElementById("stationId").value;
+            const address = document.getElementById("address").value;
+            const company = document.getElementById("company").value;
+            const fuelStocks = {
+                A98: parseFloat(document.getElementById("fuelA98").value),
+                A95: parseFloat(document.getElementById("fuelA95").value),
+                A92: parseFloat(document.getElementById("fuelA92").value)
+            };
+            const fuelPrices = {
+                A98: parseFloat(document.getElementById("priceA98").value),
+                A95: parseFloat(document.getElementById("priceA95").value),
+                A92: parseFloat(document.getElementById("priceA92").value)
+            };
+
+            const existingStation = gasStationCollection.getStationById(id);
+
+            if (existingStation) {
+                gasStationCollection.editStation(id, new AZS(id, address, company, fuelStocks, fuelPrices));
+                displayOutput(`АЗС з кодом ${id} оновлено.`);
+            } else {
+                gasStationCollection.addStation(new AZS(id, address, company, fuelStocks, fuelPrices));
+                displayOutput(`АЗС з кодом ${id} додано.`);
+            }
+
+            document.getElementById("gasStationForm").reset();
+        }
+
+        function deleteelement() {
+            const id = document.getElementById("stationId").value;
+            gasStationCollection.removeStation(id);
+            displayOutput(`АЗС з кодом ${id} видалено.`);
+            document.getElementById("gasStationForm").reset();
+        }
+
+        function displayOutput(message) {
+            document.getElementById("output").innerText = message;
+        }
+    </script>
+</body>
+
+</html>
